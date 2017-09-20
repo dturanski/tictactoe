@@ -1,28 +1,45 @@
-import com.company.GameBoard;
+package game;
+/*
+ * Copyright 2017 the original author or authors.
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *        http://www.apache.org/licenses/LICENSE-2.0
+ *
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ */
 
-public class GameScreen { //gets user input and sends it to gameboard.java
+import java.io.IOException;
+
+public class GameScreen {
 
     private GameBoard board;
-    private boolean game_won = false;
+    private boolean gameOver = false;
 
-
-    public static final int ROWS = 8, COLS = 8;
-    public static int[][] board = new int[ROWS][COLS];
-
-    boolean x_won, y_won, draw;
-
-    public static void main(){
-        createGame();
+    public static void main(String... args){
+       new GameScreen(new GameBoard()).play();
 
     }
 
-    public static void createGame(){
-        for(int i = 0; i < ROWS; i++){
-            for(int j = 0; j < COLS; j++){
-                board[i][j] = 0;
+    public GameScreen(GameBoard board) {
+        this.board = board;
+    }
+
+    public void play(){
+        while (!gameOver) {
+            System.out.println("Player X's move");
+            try {
+                System.in.read();
+            }
+            catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
-
-
 }

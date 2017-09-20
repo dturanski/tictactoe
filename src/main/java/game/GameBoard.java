@@ -59,9 +59,9 @@ public class GameBoard {
         int row = lastPos.getRow();
         char marker = lastPos.getMarker();
         int count = 0;
-        for (int i = 0; i < COLS; i++) {
-            System.out.println(String.format("checking position %d, %d, %s ", row,i, board[row][i]));
-            if (board[row][i] == marker) {
+        for (int col = 0; col < COLS; col++) {
+            System.out.println(String.format("checking position %d, %d, %s ", row,col, board[row][col]));
+            if (board[row][col] == marker) {
                 count ++;
             }
             else {
@@ -78,9 +78,9 @@ public class GameBoard {
         int col = lastPos.getColumn();
         char marker = lastPos.getMarker();
         int count = 0;
-        for (int i = 0; i < ROWS; i++) {
-            System.out.println(String.format("checking position %d, %d, %s ", i,col, board[i][col]));
-            if (board[i][col] == marker) {
+        for (int row = 0; row < ROWS; row++) {
+            System.out.println(String.format("checking position %d, %d, %s ", row,col, board[row][col]));
+            if (board[row][col] == marker) {
                 count ++;
             }
             else {
@@ -96,21 +96,21 @@ public class GameBoard {
         return false;
     }
 
-    @Override
-    public String toString() {
-        String new_string;
-        new_string =
-            "|  |  |  |  |  |  |  |  |\n" +
-            "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n" +
-                "|  |  |  |  |  |  |  |  |\n";
-        return new_string;
-    }
     //need to override the toString() method inherited from the object class. this will return one
     //string that shows the entire game board
     //you will then be able to call it in gamescreen.java to print it to the screen.
+    @Override
+    public String toString() {
+        String result = "";
+        for (int row = 0; row < ROWS; row++) {
+           result += "|";
+            for (int col = 0; col < COLS; col++) {
+                result+= (board[row][col] + "|");
+            }
+            result += "\n";
+        }
+
+        return result;
+    }
+
 }

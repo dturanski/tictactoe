@@ -11,6 +11,7 @@ public class GameboardTest {
 	@Test
 	public void initialState() {
 		GameBoard board = new GameBoard();
+		System.out.println(board);
 		for (int row = 0; row < GameBoard.ROWS; row++) {
 			for (int col = 0; col < GameBoard.COLS; col++) {
 				assertTrue(board.checkSpace(new BoardPosition(row, col, BoardPosition.X)));
@@ -37,6 +38,7 @@ public class GameboardTest {
 			board.placeMarker(new BoardPosition(row, col, BoardPosition.X));
 		}
 		assertTrue(board.checkForWinner(new BoardPosition(row, startCol + GameBoard.COUNT_FOR_WIN, BoardPosition.X)));
+		System.out.println(board);
 	}
 
 	@Test
@@ -50,6 +52,7 @@ public class GameboardTest {
 			board.placeMarker(new BoardPosition(row, col, BoardPosition.O));
 		}
 		assertTrue(board.checkForWinner(new BoardPosition(startRow + GameBoard.COUNT_FOR_WIN, col, BoardPosition.O)));
+		System.out.println(board);
 	}
 
 	@Test

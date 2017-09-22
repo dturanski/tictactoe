@@ -18,99 +18,86 @@ package game;
 
 public class GameBoard {
 
-    public static final int ROWS = 8, COLS = 8, COUNT_FOR_WIN = 5;
+	public static final int ROWS = 8, COLS = 8, COUNT_FOR_WIN = 5;
 
-    char[][] board;
+	char[][] board;
 
-    public GameBoard(){
-        board = new char[ROWS][COLS]; //allocate array of boardpositions
-        for(int i = 0; i < ROWS; i++){
-            for(int j = 0; j < COLS; j++){
-                board[i][j] =  BoardPosition.EMPTY; //allocates each element
-            }
-        }
-    }
+	public GameBoard() {
+		board = new char[ROWS][COLS]; //allocate array of boardpositions
+		for (int i = 0; i < ROWS; i++) {
+			for (int j = 0; j < COLS; j++) {
+				board[i][j] = BoardPosition.EMPTY; //allocates each element
+			}
+		}
+	}
 
+	public boolean checkSpace(BoardPosition position) {
+		//returns true if the position specified in pos is available, false otherwise
+		return (board[position.getRow()][position.getColumn()] == BoardPosition.EMPTY);
 
-    public boolean checkSpace (BoardPosition position){
-            //returns true if the position specified in pos is available, false otherwise
-        return(board[position.getRow()][position.getColumn()] == BoardPosition.EMPTY);
+	}
 
-    }
+	/**
+	 * Places the character in marker on the position specified by marker.
+	 *
+	 * @param position the {@link BoardPosition}
+	 */
+	public void placeMarker(BoardPosition position) {
 
-    /**
-     *  Places the character in marker on the position specified by marker.
-     * @param position the {@link BoardPosition}
-     */
-    public void placeMarker (BoardPosition position){
+		if (checkSpace(position)) {
+			board[position.getRow()][position.getColumn()] = position.getMarker();
+		}
+	}
 
-        if(checkSpace(position)){
-            board[position.getRow()][position.getColumn()] = position.getMarker();
-        }
-    }
+	public boolean checkForWinner(BoardPosition lastPos) {
+		//function will check to see if the lastPos placed resulted in a winner. returns true or false
+		return checkHorzintalWin(lastPos) || checkVerticalWin(lastPos) || checkDiagonalWin(lastPos);
+	}
 
-    public boolean checkForWinner(BoardPosition lastPos){
-        //function will check to see if the lastPos placed resulted in a winner. returns true or false
-        return checkHorzintalWin(lastPos) || checkVerticalWin(lastPos) || checkDiagonalWin(lastPos);
-    }
+	private boolean checkHorzintalWin(BoardPosition lastPos) {
+		// lastPos is counted twice
+		return count(lastPos, 0, 1) + count(lastPos, 0, -1) > COUNT_FOR_WIN;
 
-    private boolean checkHorzintalWin(BoardPosition lastPos){
-        System.out.println("checking horizontal " + lastPos);
-        int row = lastPos.getRow();
-        char marker = lastPos.getMarker();
-        int count = 0;
-        for (int col = 0; col < COLS; col++) {
-            System.out.println(String.format("checking position %d, %d, %s ", row,col, board[row][col]));
-            if (board[row][col] == marker) {
-                count ++;
-            }
-            else {
-                if (count < COUNT_FOR_WIN) {
-                    count = 0;
-                }
-            }
-        }
-        return count >= COUNT_FOR_WIN;
+	}
 
-    }
-    private boolean checkVerticalWin(BoardPosition lastPos){
-        System.out.println("checking vertical " + lastPos);
-        int col = lastPos.getColumn();
-        char marker = lastPos.getMarker();
-        int count = 0;
-        for (int row = 0; row < ROWS; row++) {
-            System.out.println(String.format("checking position %d, %d, %s ", row,col, board[row][col]));
-            if (board[row][col] == marker) {
-                count ++;
-            }
-            else {
-                if (count < COUNT_FOR_WIN) {
-                    count = 0;
-                }
-            }
-        }
-        return count >= COUNT_FOR_WIN;
+	private boolean checkVerticalWin(BoardPosition lastPos) {
+		// lastPos is counted twice
+		return count(lastPos, 1, 0) + count(lastPos, -1, 0) > COUNT_FOR_WIN;
+	}
 
-    }
-    private boolean checkDiagonalWin(BoardPosition lastPos){
-        return false;
-    }
+	private boolean checkDiagonalWin(BoardPosition lastPos) {
+		return false;
+	}
 
-    //need to override the toString() method inherited from the object class. this will return one
-    //string that shows the entire game board
-    //you will then be able to call it in gamescreen.java to print it to the screen.
-    @Override
-    public String toString() {
-        String result = "   0 1 2 3 4 5 6 7\n";
-        for (int row = 0; row < ROWS; row++) {
-           result += row + " |";
-            for (int col = 0; col < COLS; col++) {
-                result+= (board[row][col] + "|");
-            }
-            result += "\n";
-        }
+	private int count(BoardPosition position, int rowStep, int colStep) {
+		int row = position.getRow();
+		int col = position.getColumn();
+		int count = 0;
+		while (row < GameBoard.ROWS && row >= 0 && col < GameBoard.COLS && col >= 0 && board[row][col] == position
+			.getMarker()) {
+			count++;
+			row = row + rowStep;
+			col = col + colStep;
 
-        return result;
-    }
+		}
+		return count;
+	}
+
+	//need to override the toString() method inherited from the object class. this will return one
+	//string that shows the entire game board
+	//you will then be able to call it in gamescreen.java to print it to the screen.
+	@Override
+	public String toString() {
+		String result = "   0 1 2 3 4 5 6 7\n";
+		for (int row = 0; row < ROWS; row++) {
+			result += row + " |";
+			for (int col = 0; col < COLS; col++) {
+				result += (board[row][col] + "|");
+			}
+			result += "\n";
+		}
+
+		return result;
+	}
 
 }

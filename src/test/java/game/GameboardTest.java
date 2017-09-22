@@ -1,5 +1,6 @@
 package game;
 
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -29,46 +30,120 @@ public class GameboardTest {
 
 	@Test
 	public void checkForWinnerHorizontal() {
-		GameBoard board = new GameBoard();
-		Random random = new Random();
-		int row = random.nextInt(GameBoard.ROWS);
-		int startCol = random.nextInt(GameBoard.COLS - GameBoard.COUNT_FOR_WIN);
+		for (int i = 0; i < 1000; i++) {
+			GameBoard board = new GameBoard();
+			Random random = new Random();
+			int row = random.nextInt(GameBoard.ROWS);
+			int startCol = random.nextInt(GameBoard.COLS - GameBoard.COUNT_FOR_WIN);
+			BoardPosition lastPos = null;
+			for (int col = startCol; col < startCol + GameBoard.COUNT_FOR_WIN; col++) {
+				lastPos = new BoardPosition(row, col, BoardPosition.O);
+				board.placeMarker(lastPos);
+			}
+			try {
+				row = lastPos.getRow();
+				int col = lastPos.getColumn();
+				for (int j = 0; j < GameBoard.COUNT_FOR_WIN; j++) {
+					BoardPosition position = new BoardPosition(lastPos.getRow(), col--, lastPos.getMarker());
+					assertTrue(board.checkForWinner(position));
+				}
+			}
+			catch (Throwable t) {
+				System.out.println(board);
+				fail();
 
-		for (int col = startCol; col < startCol + GameBoard.COUNT_FOR_WIN; col++) {
-			board.placeMarker(new BoardPosition(row, col, BoardPosition.X));
+			}
 		}
-		assertTrue(board.checkForWinner(new BoardPosition(row, startCol + GameBoard.COUNT_FOR_WIN, BoardPosition.X)));
-		System.out.println(board);
 	}
 
 	@Test
 	public void checkForWinnerVertical() {
-		GameBoard board = new GameBoard();
-		Random random = new Random();
-		int col = random.nextInt(GameBoard.COLS);
-		int startRow = random.nextInt(GameBoard.ROWS - GameBoard.COUNT_FOR_WIN);
+		for (int i = 0; i < 1000; i++) {
+			GameBoard board = new GameBoard();
+			Random random = new Random();
+			int col = random.nextInt(GameBoard.COLS);
+			int startRow = random.nextInt(GameBoard.ROWS - GameBoard.COUNT_FOR_WIN);
+			BoardPosition lastPos = null;
 
-		for (int row = startRow; row < startRow + GameBoard.COUNT_FOR_WIN; row++) {
-			board.placeMarker(new BoardPosition(row, col, BoardPosition.O));
+			for (int row = startRow; row < startRow + GameBoard.COUNT_FOR_WIN; row++) {
+				lastPos = new BoardPosition(row, col, BoardPosition.O);
+				board.placeMarker(lastPos);
+			}
+
+			try {
+				int row = lastPos.getRow();
+				for (int j = 0; j < GameBoard.COUNT_FOR_WIN; j++) {
+					BoardPosition position = new BoardPosition(row--, lastPos.getColumn(), lastPos.getMarker());
+					assertTrue(board.checkForWinner(position));
+				}
+			}
+			catch (Throwable t) {
+				System.out.println(board);
+				fail();
+			}
 		}
-		assertTrue(board.checkForWinner(new BoardPosition(startRow + GameBoard.COUNT_FOR_WIN, col, BoardPosition.O)));
-		System.out.println(board);
 	}
 
 	@Test
-	public void checkForWinnerDiagonal() {
-		GameBoard board = new GameBoard();
-		Random random = new Random();
-		int startRow = random.nextInt(3);
-		int startCol = random.nextInt(3);
+	public void checkForWinnerDiagonalUpAndRight() {
+		for (int i = 0; i < 1000; i++) {
+			GameBoard board = new GameBoard();
+			Random random = new Random();
+			int startRow = GameBoard.ROWS - 1 - random.nextInt(4);
+			int startCol = random.nextInt(3);
+			BoardPosition lastPos = null;
 
-		for (int row = startRow; row < startRow + GameBoard.COUNT_FOR_WIN; row++) {
-			for (int col = startCol; col < startCol + GameBoard.COUNT_FOR_WIN; col++) {
-				board.placeMarker(new BoardPosition(row, col, BoardPosition.O));
+			int col = startCol;
+			for (int row = startRow; row > startRow - GameBoard.COUNT_FOR_WIN; row--) {
+				lastPos = new BoardPosition(row, col, BoardPosition.O);
+				board.placeMarker(lastPos);
+				col++;
 			}
+			try {
+				int row = lastPos.getRow();
+				col = lastPos.getColumn();
+				for (int j = 0; j < GameBoard.COUNT_FOR_WIN; j++) {
+					BoardPosition position = new BoardPosition(row++, col--, lastPos.getMarker());
+					assertTrue(board.checkForWinner(position));
+				}
+			}
+			catch (Throwable t) {
+				System.out.println(board);
+				fail();
+			}
+
 		}
-		assertTrue(board.checkForWinner(
-			new BoardPosition(startRow + GameBoard.COUNT_FOR_WIN, startCol + GameBoard.COUNT_FOR_WIN,
-				BoardPosition.O)));
+	}
+
+	@Test
+	public void checkForWinnerDiagonalDownAndRight() {
+		for (int i = 0; i < 1000; i++) {
+			GameBoard board = new GameBoard();
+			Random random = new Random();
+			int startRow = random.nextInt(4);
+			int startCol = random.nextInt(4);
+			BoardPosition lastPos = null;
+
+			int col = startCol;
+			for (int row = startRow; row < startRow + GameBoard.COUNT_FOR_WIN; row++) {
+				lastPos = new BoardPosition(row, col, BoardPosition.O);
+				board.placeMarker(lastPos);
+				col++;
+			}
+			try {
+				int row = lastPos.getRow();
+				col = lastPos.getColumn();
+				for (int j = 0; j < GameBoard.COUNT_FOR_WIN; j++) {
+					BoardPosition position = new BoardPosition(row--, col--, lastPos.getMarker());
+					assertTrue(board.checkForWinner(position));
+				}
+
+			}
+			catch (Throwable t) {
+				System.out.println(board);
+				fail();
+			}
+
+		}
 	}
 }
